@@ -8,52 +8,42 @@ import pro.sky.employee_book.Exeptions.EmployeeAlreadyAddedException;
 import pro.sky.employee_book.Exeptions.EmployeeNotFound;
 import pro.sky.employee_book.Exeptions.EmployeeStorageIsFullException;
 
+import java.util.Collection;
+
 @RestController
 @RequestMapping("/employee")
 
 public class EmployeeBookController {
-    private final EmployeeService employeeService;
+    private final EmployeeServ employeeService;
 
-    public EmployeeBookController(EmployeeService employeeService) {
+    public EmployeeBookController(EmployeeServ employeeService) {
         this.employeeService = employeeService;
     }
 
     @GetMapping()
-    public String hello() {
-            return employeeService.getAll() ;
+    public Collection<Employee> hello() {
+        return employeeService.getAll();
     }
 
     @GetMapping("/add")
-    public String addEmployee(@RequestParam("firstName") String firstName,
-                              @RequestParam("lastName") String lastName) {
-        try {
-            return employeeService.createEmployee(firstName, lastName).toString();
-        } catch (EmployeeStorageIsFullException | EmployeeAlreadyAddedException e) {
-            System.out.println(e.getMessage());
-            return e.getMessage();
-        }
+    public Employee addEmployee(@RequestParam("firstName") String firstName,
+                                @RequestParam("lastName") String lastName) {
+        return employeeService.createEmployee(firstName, lastName);
+
     }
 
     @GetMapping("/remove")
-    public String removeEmployee(@RequestParam("firstName") String firstName,
-                                 @RequestParam("lastName") String lastName) {
-        try {
-            return employeeService.deleteEmployee(firstName, lastName).toString();
-        } catch (EmployeeNotFound e) {
-            System.out.println(e.getMessage());
-            return e.getMessage();
-        }
+    public Employee removeEmployee(@RequestParam("firstName") String firstName,
+                                   @RequestParam("lastName") String lastName) {
+        return employeeService.deleteEmployee(firstName, lastName);
+
     }
 
     @GetMapping("/find")
-    public String findEmployee(@RequestParam("firstName") String firstName,
-                               @RequestParam("lastName") String lastName) {
-        try {
-           return employeeService.findEmployee(firstName, lastName).toString();
-        } catch (EmployeeNotFound e) {
-            System.out.println(e.getMessage());
-            return e.getMessage();
-        }
+    public Employee findEmployee(@RequestParam("firstName") String firstName,
+                                 @RequestParam("lastName") String lastName) {
+        return employeeService.findEmployee(firstName, lastName);
+
     }
 
 }
