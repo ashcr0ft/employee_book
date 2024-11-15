@@ -3,50 +3,57 @@ package pro.sky.employee_book;
 import org.springframework.stereotype.Service;
 import pro.sky.employee_book.Exeptions.EmployeeAlreadyAddedException;
 import pro.sky.employee_book.Exeptions.EmployeeNotFound;
-import pro.sky.employee_book.Exeptions.EmployeeStorageIsFullException;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+
 
 @Service
 public class EmployeeServImpl implements EmployeeServ {
-    final int MAX_EMPLOYEE = 3;
-    private static List<Employee> employees = new ArrayList<>();
+
+    private static Map<String, Employee> employees = new HashMap<>();
+
+    private static String generateKey(String surname, String firstName, String patronymic) {
+        return surname + " " + firstName + " " + patronymic;
+    }
 
     @Override
-    public Employee createEmployee(String firstName, String lastName) {
-        Employee employee = new Employee(firstName, lastName);
-        if (employees.size() == MAX_EMPLOYEE) {
-            throw new EmployeeStorageIsFullException("Превышено количество сотрудников");
-        }
-        if (employees.contains(employee)) {
+    public Employee createEmployee(String surname, String firstName, String patronymic) {
+        Employee employee = new Employee(surname, firstName, patronymic);
+        String key  = generateKey(surname, firstName, patronymic);
+        if (!employees.containsKey(key)) {
+            employees.put(key, employee);
+            return employee;
+        } else {
             throw new EmployeeAlreadyAddedException("Такой сотрудник уже есть");
         }
-        employees.add(employee);
-        return employee;
+
+
+    }
+
+
+    @Override
+    public Employee deleteEmployee(String surname, String firstName, String patronymic) {
+        String key = generateKey(surname, firstName, patronymic);
+        if (employees.containsKey(key)) {
+            Employee employee = employees.get(key);
+            employees.remove(key);
+            return employee;
+        } else {
+            throw new EmployeeNotFound("Сотрудник не найден");
+        }
     }
 
     @Override
-    public Employee deleteEmployee(String firstName, String lastName) {
-        Employee employee = new Employee(firstName, lastName);
-        if (employees.contains(employee)) {
-            employees.remove(employee);
-            return employee;
+    public Employee findEmployee(String surname, String firstName, String patronymic) {
+        String key = generateKey(surname, firstName, patronymic);
+        if (employees.containsKey(key)) {
+            return employees.get(key);
         }
         throw new EmployeeNotFound("Сотрудник не найден");
     }
 
-    @Override
-    public Employee findEmployee(String firstName, String lastName) {
-        Employee employee = new Employee(firstName, lastName);
-        if (employees.contains(employee)) {
-            return employee;
-        }
-        throw new EmployeeNotFound("Сотрудник не найден");
-    }
-
-    public Collection<Employee> getAll() {
-        return employees;
+    public String getAll() {
+      return employees.toString();
     }
 }
