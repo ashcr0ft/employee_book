@@ -4,9 +4,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import pro.sky.employee_book.Exeptions.EmployeeAlreadyAddedException;
-import pro.sky.employee_book.Exeptions.EmployeeNotFound;
-import pro.sky.employee_book.Exeptions.EmployeeStorageIsFullException;
 
 import java.util.Collection;
 
@@ -21,28 +18,30 @@ public class EmployeeBookController {
     }
 
     @GetMapping()
-    public Collection<Employee> hello() {
+    public String hello() {
         return employeeService.getAll();
     }
 
     @GetMapping("/add")
-    public Employee addEmployee(@RequestParam("firstName") String firstName,
-                                @RequestParam("lastName") String lastName) {
-        return employeeService.createEmployee(firstName, lastName);
-
+    public String addEmployee(@RequestParam("surname") String surname,
+                                @RequestParam("firstName") String firstName,
+                                @RequestParam("patronymic") String patronymic) {
+        return employeeService.createEmployee(surname, firstName, patronymic).toString();
     }
 
     @GetMapping("/remove")
-    public Employee removeEmployee(@RequestParam("firstName") String firstName,
-                                   @RequestParam("lastName") String lastName) {
-        return employeeService.deleteEmployee(firstName, lastName);
+    public String removeEmployee(@RequestParam("surname") String surname,
+                                   @RequestParam("firstName") String firstName,
+                                   @RequestParam("patronymic") String patronymic) {
+        return employeeService.deleteEmployee(surname, firstName, patronymic).toString();
 
     }
 
     @GetMapping("/find")
-    public Employee findEmployee(@RequestParam("firstName") String firstName,
-                                 @RequestParam("lastName") String lastName) {
-        return employeeService.findEmployee(firstName, lastName);
+    public String findEmployee(@RequestParam("surname") String surname,
+                                 @RequestParam("firstName") String firstName,
+                                 @RequestParam("patronymic") String patronymic) {
+        return employeeService.findEmployee(surname, firstName, patronymic).toString();
 
     }
 

@@ -1,10 +1,11 @@
 package pro.sky.employee_book;
 
-import java.util.Collection;
-
 public interface EmployeeServ {
-    Employee createEmployee(String firstName, String lastName);
-    Employee deleteEmployee(String firstName, String lastName);
-    Employee findEmployee(String firstName, String lastName);
-    Collection<Employee> getAll();
+    Employee createEmployee(String surname, String firstName, String patronymic);
+
+    Employee deleteEmployee(String surname, String firstName, String patronymic);
+
+    Employee findEmployee(String surname, String firstName, String patronymic);
+
+    String getAll();
 }
